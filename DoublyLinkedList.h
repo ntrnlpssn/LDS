@@ -8,17 +8,17 @@
 
 template<class T>
 class DoublyLinkedList
-{   
-    struct Node
-        {
-            T data;
-            Node* next;
-            Node* prev;
-            Node(T val): data(val), next(nullptr), prev(nullptr) {}
-        };
-        Node *head, *tail;
-
+{
 public:
+    struct Node
+    {
+        T data;
+        Node* next;
+        Node* prev;
+        Node(T val): data(val), next(nullptr), prev(nullptr) {}
+    };
+    Node *head, *tail;
+
       DoublyLinkedList(): head(nullptr), tail(nullptr) {}
 
      ~DoublyLinkedList()
@@ -34,90 +34,103 @@ public:
       }
 
       void addBegin(T val)
-            {
-                Node *node = new Node(val);
-              //  Node *tmp = head;
-                if (head == nullptr)
-                {
-                    head = node;
-                    tail = node;
-                }
-                else
-                {
-                    node->next = head;
-                    head = node;
-                    node->next->prev = node;
-                }
-            }
+      {
+          Node *node = new Node(val);
+        //  Node *tmp = head;
+          if (head == nullptr)
+          {
+              head = node;
+              tail = node;
+          }
+          else
+          {
+              node->next = head;
+              head = node;
+              node->next->prev = node;
+          }
+      }
 
       void addEnd(T val)
       {
           Node *node = new Node(val);
-          if(tail->next == nullptr)
+          if(tail == nullptr)
+          {
+              head = node;
+              tail = node;
+          }
+          else
           {
               tail->next = node;
+              node->prev = tail;
               tail = node;
           }
       }
 
-      void deleteVal(T val)
-          {
-               Node* find = findVal(val);
-               Node *tmp = head;
+      void deleteNode(Node *node)
+      {
+           Node *tmp = head;
 
-               if(tmp == find)
-               {
-                   head = tmp->next;
-               }
-               else
-               {
-                   while(find != nullptr)
-                   {
-                       if(tmp->next == find)
-                       {
-                           tmp->next = find->next;
-                           find->next->prev = tmp;
-                           delete find;
-                           return;
-                       }
-                       tmp = tmp->next;
-                   }
-               }
+           while(tmp != node && tmp != nullptr)
+           {
+               tmp = tmp->next;
            }
+           if(tmp == head)
+           {
+               head = head->next;
+               head->prev = nullptr;
+           }
+           else if(tmp == tail)
+           {
+               tail = tmp->prev;
+               tail->next = nullptr;
+           }
+           else
+           {
+               tmp->prev->next = tmp->next;
+               tmp->next->prev = tmp->prev;
+           }
+           delete tmp;
+       }
 
-      void insertBefore(Node *position,T val)
+      void insertBefore(Node *node, T val)
       {
-          Node *node = new Node(val);
-        //  Node *tmp = position ;
-          if(position == 0)
+          if(node == head)
           {
-              node->prev=nullptr;
-              node->next = head;
-              head = node;
-//              head = node;
-//              node->next->prev = node;
-//              Node* find = sizeList();
-//              std::cout<< find;
+              addBegin(val);
+              return;
           }
-         else
-          {
-              node->next = position;
-              node->prev = position->prev;
-              position->prev = node;
-          }
+
+          Node *newNode = new Node(val);
+          node->prev->next = newNode;
+          newNode->prev = node->prev;
+          node->prev = newNode;
+          newNode->next = node;
       }
 
-      void insertAfter(Node *position,T val)
+      void insertAfter(Node *node, T val)
       {
-          Node *node = new Node(val);
-          node->prev = position;
-          node->next = position->next;
-          position->next= node;
+          if(node == tail)
+          {
+              addEnd(val);
+              return;
+          }
 
-          if(position == nullptr)
-              tail =node;
+          Node *newNode = new Node(val);
+          node->next->prev = newNode;
+          newNode->next = node->next;
+          node->next = newNode;
+          newNode->prev = node;
       }
 
+      Node *findVal(T val) //returns node of the given number
+      {
+          Node *tmp = head;
+          while(tmp->data != val && tmp != nullptr)
+          {
+              tmp = tmp->next;
+          }
+          return tmp;
+       }
 
       template <class U>
       friend std::ostream & operator<<(std::ostream & os, const DoublyLinkedList<U> & dll){
@@ -126,35 +139,6 @@ public:
       }
 
       private:
-
-      Node *findVal(T n) //returns node of the given number
-      {
-           Node *node = head;
-           while(node != nullptr)
-           {
-                 if(node->data == n)
-                       return node;
-
-                 node = node->next;
-           }
-           std::cerr << "No such element in the list \n";
-           return nullptr;
-       }
-
-//      Node *sizeList()
-//      {
-//           Node *node = head;
-//           int count=0;
-//           while(node != nullptr)
-//           {
-//               count++;
-//               node = node->next;
-//               if (node->next == nullptr)
-//               return count;
-//           }
-//           std::cerr << "No such element in the list \n";
-//           return nullptr;
-//       }
 
     void display(std::ostream& out = std::cout) const
     {
