@@ -15,7 +15,7 @@ public:
         T data;
         Node* next;
         Node* prev;
-        Node(T val): data(val), next(nullptr), prev(nullptr) {}
+        Node(const T& val): data(val), next(nullptr), prev(nullptr) {}
     };
     Node *head, *tail;
 
@@ -33,7 +33,7 @@ public:
           head = nullptr;
       }
 
-      void addBegin(T val)
+      void addBegin(const T& val)
       {
           Node *node = new Node(val);
         //  Node *tmp = head;
@@ -50,7 +50,7 @@ public:
           }
       }
 
-      void addEnd(T val)
+      void addEnd(const T& val)
       {
           Node *node = new Node(val);
           if(tail == nullptr)
@@ -92,7 +92,7 @@ public:
            delete tmp;
        }
 
-      void insertBefore(Node *node, T val)
+      void insertBefore(Node *node,const T& val)
       {
           if(node == head)
           {
@@ -107,7 +107,7 @@ public:
           newNode->next = node;
       }
 
-      void insertAfter(Node *node, T val)
+      void insertAfter(Node *node, const T& val)
       {
           if(node == tail)
           {
@@ -122,7 +122,7 @@ public:
           newNode->prev = node;
       }
 
-      Node *findVal(T val) //returns node of the given number
+      Node *findVal(const T& val) //returns node of the given number
       {
           Node *tmp = head;
           while(tmp->data != val && tmp != nullptr)
