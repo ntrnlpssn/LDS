@@ -1,4 +1,5 @@
-﻿#include <iostream>
+#include <QCoreApplication>
+#include <iostream>
 #include <fstream>
 
 #include "DoublyLinkedList.h"
@@ -11,8 +12,10 @@ int file_input(const string& filename);
 template <typename T>
 int file_output(const string& filename, const DoublyLinkedList<T>& data);
 
-int main()
+int main(int argc, char *argv[])
 {
+    QCoreApplication a(argc, argv);
+
     DoublyLinkedList<int> l1;
     l1.addBegin(3);
     l1.addEnd(5);
@@ -20,26 +23,26 @@ int main()
     l1.addEnd(12);
     l1.addBegin(6);
     l1.addEnd(88);
-    cout << l1 << "\n";
+    cout << l1 <<"\n";
     l1.insertBefore(someNode, 77);
     l1.insertAfter(someNode, 90);
     someNode->value = 1488;
-    cout << l1 << "\n";
+    cout<<l1<<"\n";
     l1.deleteNode(someNode);
-    cout << l1 << "\n";
+    cout<<l1<<"\n";
     auto anotherNode = l1.findVal(6);
     anotherNode->value = 99;
-    cout << l1 << "\n";
+    cout<<l1<<"\n";
     l1.deleteNode(anotherNode);
-    cout << l1 << "\n";
-    file_output("list1.txt", l1);
+    cout<<l1<<"\n";
+    file_output("list1.txt",l1);
     file_input("list1.txt");
     file_output_commented();
     file_input("result.txt");
 
     system("PAUSE");
 
-    return 0;
+    return a.exec();
 }
 
 template <typename T>
